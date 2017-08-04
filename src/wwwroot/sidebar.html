@@ -1,0 +1,12 @@
+<nav id="sidebar">
+<div class="inner">
+
+<ul>
+    <li>
+        <h5>docs</h5>
+    </li>
+    {{ docLinks | select: <li class="{ 'active' | if(equals(it.Key, PathInfo)) }"><a href="{ it.Key }">{ it.Value }</a></li> }}
+</ul>
+
+</div>
+</nav>
