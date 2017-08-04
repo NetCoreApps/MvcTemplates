@@ -1,4 +1,3 @@
-
 using System.Linq;
 using System.Collections.Generic;
 using ServiceStack.Templates;
@@ -41,4 +40,5 @@ namespace MvcTemplates
 
             return to;
         }
-    }}
+    }
+}
