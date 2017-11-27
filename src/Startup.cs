@@ -13,7 +13,7 @@ using System.Collections;
 using System.IO;
 using ServiceStack;
 using ServiceStack.Host.Handlers;
-using ServiceStack.VirtualPath;
+using ServiceStack.IO;
 using ServiceStack.Templates;
 using ServiceStack.Web;
 using ServiceStack.Text;
@@ -55,7 +55,7 @@ namespace MvcTemplates
 
             var i = 1;
             DocLinks.ForEach((page,title) => customFilters.DocsIndex[i++] = new KeyValuePair<string, string>(
-                "http://templates.netcore.io/docs/" + page,
+                "http://templates.servicestack.net/docs/" + page,
                 title
             ));
 
