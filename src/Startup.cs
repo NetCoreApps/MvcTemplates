@@ -3,8 +3,8 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Logging;
 using Microsoft.AspNetCore.Mvc;
 using System.Net;
 using System.Web;
@@ -14,7 +14,7 @@ using System.IO;
 using ServiceStack;
 using ServiceStack.Host.Handlers;
 using ServiceStack.IO;
-using ServiceStack.Templates;
+using ServiceStack.Script;
 using ServiceStack.Web;
 using ServiceStack.Text;
 using ServiceStack.Mvc;
@@ -49,28 +49,26 @@ namespace MvcTemplates
 
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddMvc();
+            services.AddMvc(options => options.EnableEndpointRouting = false);
 
-            var customFilters = new CustomTemplateFilters();
+            var customFilters = new CustomScriptMethods();
 
             var i = 1;
             DocLinks.ForEach((page,title) => customFilters.DocsIndex[i++] = new KeyValuePair<string, string>(
-                "http://templates.servicestack.net/docs/" + page,
+                "https://sharpscript.net/docs/" + page,
                 title
             ));
 
-            var context = new TemplateContext { 
-                TemplateFilters = { customFilters }
+            var context = new ScriptContext { 
+                ScriptMethods = { customFilters }
             };
             services.AddSingleton(context);
             services.AddSingleton(context.Pages);
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
-            loggerFactory.AddConsole();
-
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
@@ -85,7 +83,7 @@ namespace MvcTemplates
                     template: "{controller=Home}/{action=Index}/{id?}");
             });
 
-            var context = app.ApplicationServices.GetService<TemplateContext>();
+            var context = app.ApplicationServices.GetService<ScriptContext>();
             context.VirtualFiles = new FileSystemVirtualFiles(env.WebRootPath);
             context.Init();
         }
@@ -93,8 +91,8 @@ namespace MvcTemplates
 
     public class HomeController : Controller
     {
-        ITemplatePages pages;
-        public HomeController(ITemplatePages pages) => this.pages = pages;
+        ISharpPages pages;
+        public HomeController(ISharpPages pages) => this.pages = pages;
 
         public ActionResult Index()
         {

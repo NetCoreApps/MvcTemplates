@@ -1,10 +1,10 @@
 using System.Linq;
 using System.Collections.Generic;
-using ServiceStack.Templates;
+using ServiceStack.Script;
 
 namespace MvcTemplates
 {
-    public class CustomTemplateFilters : TemplateFilter
+    public class CustomScriptMethods : ScriptMethods
     {
         public Dictionary<int, KeyValuePair<string, string>> DocsIndex { get; } = new Dictionary<int, KeyValuePair<string, string>>();
 
